@@ -13,14 +13,43 @@ import { InvoiceDataService } from '../../services/invoice-data.service';
 })
 export class CustomerDetailsComponent {
   customerForm : FormGroup;
-
+ stateList: string[] = [
+  'Andhra Pradesh',
+  'Arunachal Pradesh',
+  'Assam',
+  'Bihar',
+  'Chhattisgarh',
+  'Goa',
+  'Gujarat',
+  'Haryana',
+  'Himachal Pradesh',
+  'Jharkhand',
+  'Karnataka',
+  'Kerala',
+  'Madhya Pradesh',
+  'Maharashtra',
+  'Manipur',
+  'Meghalaya',
+  'Mizoram',
+  'Nagaland',
+  'Odisha',
+  'Punjab',
+  'Rajasthan',
+  'Sikkim',
+  'Tamil Nadu',
+  'Telangana',
+  'Tripura',
+  'Uttar Pradesh',
+  'Uttarakhand',
+  'West Bengal'
+];
   constructor( private formBuilder: FormBuilder, private router: Router,  private invoiceService: InvoiceDataService) {
      this.customerForm = this.formBuilder.group({
       customerName:['',Validators.required],
       customerAddress:['',Validators.required],
-      customerGSTIN: ['',Validators.required],
+      customerGSTIN: [''],
       customerState:['',Validators.required],
-      customerStateCode:['',[Validators.required, Validators.pattern('^[0-9]{2}$')]]
+      customerStateCode:['',[Validators.required, Validators.pattern('^[0-9]{6}$')]]
     });
   }
  onSubmit()

@@ -99,12 +99,37 @@ export class ProductDetailsComponent {
   onSubmit(): void {
     if (this.productForm.valid) {
       // this.productData.emit(this.productForm.valid);
-       this.invoiceService.setProducts(this.productForm.value.products);
+      const product = this.groupProducts(this.productForm.value.products);
+       this.invoiceService.setProducts(product);
        this.router.navigate(['/invoice']);
       
       console.log('Form Value:', this.productForm.value);
     } else {
       this.productForm.markAllAsTouched();
     }
+  }
+
+  groupProducts(product:any[]) : any[]
+  {
+     const map = new Map<String , any>();
+     product.forEach(item =>{
+      const key = item.productName+'_'+item.amount;
+      if(map.has(key))
+      {
+        const existingProduct = map.get(key);
+        existingProduct.quantity += Number(item.quantity);
+        existingProduct.total_amount = existingProduct.quantity * existingProduct.amount;
+      }
+      else
+      {
+        map.set(key,{...item,
+          quantity :Number(item.quantity),
+          amount :Number(item.amount),
+          total_amount: Number(item.quantity) * Number(item.amount)
+        });
+      }
+     });
+
+     return Array.from(map.values());
   }
 }

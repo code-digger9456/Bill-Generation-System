@@ -4,9 +4,10 @@ import { ProductDetailsComponent } from './billing-details/product-details/produ
 import { InvoiceComponent } from './billing-details/invoice/invoice.component';
 
 export const routes: Routes = [
+    {path:'', redirectTo:'customer_details', pathMatch:'prefix'},
     { path: 'customer_details',   component: CustomerDetailsComponent },
     { path: 'product_details',   component: ProductDetailsComponent },
     { path: 'invoice', component: InvoiceComponent },
-    { path: '**',   component: CustomerDetailsComponent }
+    // { path: '**',   component: CustomerDetailsComponent }
 
 ];
