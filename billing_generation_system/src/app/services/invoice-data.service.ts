@@ -6,29 +6,32 @@ import { Injectable } from '@angular/core';
 })
 export class InvoiceDataService {
 
+    private key = 'invoiceDate';
   constructor(private http: HttpClient) {}
 
- customerData: any;
-  productData: any;
-
-  setCustomer(data: any) {
-    this.customerData = data;
+  saveInvoiceData(data: any)
+  {
+    const saveddata = sessionStorage.setItem(this.key, JSON.stringify(data));
+  }
+  updateInvoiceData(section : string, data: any)
+  {
+    const existingData = this.getInvoiceData();
+    existingData[section] = data;
+    sessionStorage.setItem(this.key, JSON.stringify(existingData));
+  }
+  getInvoiceData()
+  {
+    const data = sessionStorage.getItem(this.key);
+    return data ? JSON.parse(data) :{};
+  }
+  clearInvoiceDate()
+  {
+    sessionStorage.removeItem(this.key);
   }
 
-  getCustomer() {
-    return this.customerData;
-  }
 
-  setProducts(data: any) {
-    this.productData = data;
+  saveCustomer(data: any)
+  {
+    return this.http.post("http://localhost:8080/billing/customer/addCustomer", data);
   }
-
-  getProducts() {
-    return this.productData;
-  }
-
-  // saveCustomer(data: any)
-  // {
-  //   return this.http.post("'http://localhost:8080/billing/customer/addCustomer", data);
-  // }
 }

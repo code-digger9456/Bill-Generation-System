@@ -11,7 +11,7 @@ import { InvoiceDataService } from '../../services/invoice-data.service';
   templateUrl: './customer-details.component.html',
   styleUrl: './customer-details.component.css'
 })
-export class CustomerDetailsComponent {
+export class CustomerDetailsComponent  {
   customerForm : FormGroup;
  stateList: string[] = [
   'Andhra Pradesh',
@@ -52,11 +52,25 @@ export class CustomerDetailsComponent {
       customerStateCode:['',[Validators.required, Validators.pattern('^[0-9]{6}$')]]
     });
   }
+
+  ngOnInit():void {
+    const saveData = this.invoiceService.getInvoiceData();
+    if(saveData.customerData)
+    {
+      this.customerForm.patchValue(saveData.customerData);
+    }
+
+    this.customerForm.valueChanges.subscribe(value => { 
+      this.invoiceService.updateInvoiceData('customerData', value);
+    });
+  }
+
+
  onSubmit()
   {
     if(this.customerForm.valid)
     {
-      this.invoiceService.setCustomer(this.customerForm.value);
+      // this.invoiceService.setCustomer(this.customerForm.value);
       this.router.navigate(['/product_details']);
       console.log(this.customerForm.valid);
     }

@@ -19,8 +19,9 @@ export class InvoiceComponent {
   constructor(private invoiceDataService: InvoiceDataService){}
   ngOnInit()
   {
-    this.customerDetails = this.invoiceDataService.getCustomer();
-    this.productDetails = this.invoiceDataService.getProducts();
+    this.customerDetails = this.invoiceDataService.getInvoiceData().customerData;
+    this.productDetails = this.invoiceDataService.getInvoiceData().productData?.products || [];
+    
   }
 
   // receiveCustomer(data: any) {
