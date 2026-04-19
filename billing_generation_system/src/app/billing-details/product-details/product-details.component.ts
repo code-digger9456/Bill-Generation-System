@@ -48,7 +48,31 @@ export class ProductDetailsComponent {
     // Add first row automatically
     // this.addProduct();
   }
- 
+  
+  ngOnInit(): void{
+    const saveData = this.invoiceService.getInvoiceData();
+    if(saveData?.productData?.products)
+    {
+      saveData.productData.products.forEach((item: any) =>{
+        const productGroup = this.fb.group({
+          productName: [item.productName, Validators.required],
+          quantity:[item.quantity, Validators.required],
+          amount:[item.amount, Validators.required],
+          total_amount:[item.total_amount, Validators.required]
+        });
+
+        productGroup.get('quantity')?.valueChanges.subscribe(() =>{this.calculate(productGroup)});
+        productGroup.get('amount')?.valueChanges.subscribe(() => {this.calculate(productGroup)});
+         this.products.push(productGroup);
+      });
+      // this.table.renderRows();
+      this.productForm.patchValue(saveData.productData);
+    }
+
+    this.productForm.valueChanges.subscribe(value =>{
+      this.invoiceService.updateInvoiceData('productData', value);
+    });
+  }
 
   // Getter for FormArray
   get products(): FormArray {
@@ -71,7 +95,7 @@ export class ProductDetailsComponent {
       this.calculate(productGroup)
     });
     this.products.push(productGroup);
-      this.table.renderRows();
+      this.table?.renderRows();
   }
 
     calculate(group : FormGroup)
@@ -88,23 +112,56 @@ export class ProductDetailsComponent {
   // Remove row
   removeProduct(index: number): void {
     this.products.removeAt(index);
-      this.table.renderRows();
+      this.table?.renderRows();
   }
 
   trackByIndex(index: number): number {
   return index;
 }
+  groupProducts(product:any[]) : any[]
+  {
+     const map = new Map<String , any>();
+     product.forEach(item =>{
+      const key = item.productName+'_'+item.amount;
+      if(map.has(key))
+      {
+        const existingProduct = map.get(key);
+        existingProduct.quantity += Number(item.quantity);
+        existingProduct.total_amount = existingProduct.quantity * existingProduct.amount;
+      }
+      else
+      {
+        map.set(key,{...item,
+          quantity :Number(item.quantity),
+          amount :Number(item.amount),
+          total_amount: Number(item.quantity) * Number(item.amount)
+        });
+      }
+     });
 
-  // Submit
+     return Array.from(map.values());
+  }
+
+   // Submit
   onSubmit(): void {
     if (this.productForm.valid) {
       // this.productData.emit(this.productForm.valid);
-       this.invoiceService.setProducts(this.productForm.value.products);
-       this.router.navigate(['/invoice']);
-      
+      const product = this.groupProducts(this.productForm.value.products);
+      this.invoiceService.updateInvoiceData('productData',{products:product});
+      this.invoiceService.saveCustomer(this.invoiceService.getInvoiceData().customerData).subscribe
+      (
+        {
+          next:(response) =>{
+            console.log("Customer saved successfully", response);
+             this.router.navigate(['/invoice']);
+          },
+          error:(err)=>{console.log("Error saving customer",err);}
+        }
+      );
+      //  this.invoiceService.setProducts(product);
       console.log('Form Value:', this.productForm.value);
     } else {
       this.productForm.markAllAsTouched();
-    }
+    } 
   }
 }
