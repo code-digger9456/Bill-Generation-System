@@ -1,0 +1,65 @@
+<form [formGroup]="customerForm" (ngSubmit)="onSubmit()">
+    <div>
+        <label class="form-heading">
+            <h1>Customer Details</h1>
+        </label>
+    </div>
+    <div class="form-group">
+        <label for="customerName">Customer Name</label>
+        <input type="text" class="form-control" id="customerName" formControlName="customerName"
+            placeholder="Enter customer name">
+
+        <small *ngIf="customerForm.get('customerName')?.touched 
+                     && customerForm.get('customerName')?.invalid">
+            Name is required
+        </small>
+    </div>
+
+    <div class="form-group">
+        <label for="customerAddress">Address</label>
+        <input type="text" class="form-control" id="customerAddress" formControlName="customerAddress"
+            placeholder="Enter customer address">
+
+        <small *ngIf="customerForm.get('customerAddress')?.touched 
+                     && customerForm.get('customerAddress')?.invalid">
+            Address is required
+        </small>
+    </div>
+
+    <div class="form-group">
+        <label for="customerGSTIN">GSTIN / Aadhaar No</label>
+        <input type="text" class="form-control" id="customerGSTIN" formControlName="customerGSTIN"
+            placeholder="Enter customer GSTIN or Aadhaar number">
+
+        <small *ngIf="customerForm.get('customerGSTIN')?.touched
+                     && customerForm.get('customerGSTIN')?.invalid">
+            GSTIN must be 15 uppercase characters
+        </small>
+    </div>
+    <div class="form-group">
+        <label for="customerState">State</label>
+        <select type="text" class="form-control" id="customerState" formControlName="customerState">
+            <option value="">-- Select State --</option>
+
+            <option *ngFor="let state of stateList" [value]="state">
+                {{ state }}
+            </option>
+        </select>
+    </div>
+
+
+    <div class="form-group">
+        <label for="customerStateCode">Pin Code</label>
+        <input type="text" class="form-control" id="customerStateCode" formControlName="customerStateCode"
+            placeholder="Enter customer state code">
+
+        <small *ngIf="customerForm.get('customerStateCode')?.errors?.['pattern']">
+            State code must be 2 digits
+        </small>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="customerForm.invalid">
+        Next
+    </button>
+
+</form>

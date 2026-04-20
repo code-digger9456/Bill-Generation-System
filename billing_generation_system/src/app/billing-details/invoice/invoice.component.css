@@ -1,0 +1,57 @@
+#invoice-container{
+  width:800px;
+  margin:auto;
+  padding:20px;
+  border:1px solid #ccc;
+  font-family:Arial;
+}
+
+.header{
+  text-align:center;
+}
+
+.customer-section{
+  display:flex;
+  justify-content:space-between;
+  margin-top:20px;
+}
+
+.product-table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+}
+
+.product-table th,
+.product-table td{
+  border:1px solid black;
+  padding:6px;
+  text-align:center;
+}
+
+.tax-summary{
+  display:flex;
+  justify-content:space-between;
+  margin-top:20px;
+}
+
+.notes{
+  width:60%;
+  font-size:12px;
+}
+
+.totals{
+  width:35%;
+  border:1px solid black;
+  padding:10px;
+}
+
+.footer{
+  margin-top:20px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.signature{
+  text-align:right;
+}

@@ -1,0 +1,122 @@
+<!-- <h2>Invoice</h2>
+
+<h3>Customer Details</h3>
+
+<p>Name: {{customerDetails?.customerName}}</p>
+<p>Address: {{customerDetails?.customerAddress}}</p>
+<p>GSTIN: {{customerDetails?.customerGSTIN}}</p>
+<p>State: {{customerDetails?.customerState}}</p>
+
+<h3>Products</h3>
+
+<table border="1" width="100%">
+<tr>
+<th>Product</th>
+<th>Qty</th>
+<th>Amount</th>
+<th>Total</th>
+</tr>
+
+<tr *ngFor="let p of productDetails || []">
+<td>{{p.productName}}</td>
+<td>{{p.quantity}}</td>
+<td>{{p.amount}}</td>
+<td>{{p.total_amount}}</td>
+</tr>
+</table>
+
+<button (click)="generatePdf()">Generate PDF</button> -->
+
+<div id="invoice-container">
+
+  <!-- Header -->
+  <div class="header">
+    <h2>Jaiswal Enterprises</h2>
+    <p>Dullahapur, Ghazipur</p>
+  </div>
+
+  <!-- Customer Details -->
+  <div class="customer-section">
+    <div>
+      <p><strong>Name of Purchaser:</strong> {{customerDetails?.customerName}}</p>
+      <p><strong>Address:</strong> {{customerDetails?.customerAddress}}</p>
+      <p><strong>GSTIN/Aadhar:</strong> {{customerDetails?.customerGSTIN}}</p>
+    </div>
+
+    <div class="invoice-info">
+      <p><strong>Invoice No:</strong> {{invoiceNumber}}</p>
+      <p><strong>Date:</strong> {{today | date}}</p>
+      <p><strong>State:</strong> {{customerDetails?.customerState}}</p>
+      <p><strong>State Code:</strong> {{customerDetails?.customerStateCode}}</p>
+    </div>
+  </div>
+
+  <!-- Product Table -->
+  <table class="product-table">
+    <thead>
+      <tr>
+        <th>S.N.</th>
+        <th>Description</th>
+        <th>Qty</th>
+        <th>Rate</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let p of productDetails; let i = index">
+        <td>{{i + 1}}</td>
+        <td>{{p.productName}}</td>
+        <td>{{p.quantity}}</td>
+        <td>{{p.amount}}</td>
+        <td>{{p.total_amount}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Tax Summary -->
+  <div class="tax-summary">
+
+    <div class="notes">
+      <p>1. Company goods warranty by manufacturer only.</p>
+      <p>2. Goods once sold will not be taken back.</p>
+      <p>3. No guarantee for breakage.</p>
+      <p>4. Warranty processing may take 15–25 days.</p>
+      <p>5. Disputes subject to Ghazipur jurisdiction.</p>
+    </div>
+
+    <div class="totals">
+
+      <p><strong>Total Amount Before Tax:</strong> {{00}}</p>
+      <p><strong>Add: CGST:</strong> {{00}}</p>
+      <p><strong>Add: SGST:</strong> {{00}}</p>
+      <p><strong>Total Amount GST:</strong> {{00}}</p>
+      <p><strong>Total Amount After Tax:</strong> {{00}}</p>
+
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+
+    <p><strong>Total Amount in Words:</strong> {{0000}}</p>
+
+    <div class="bank">
+      <p>Bank Name: Indian Bank</p>
+      <p>A/C No: 50329945256</p>
+      <p>IFSC: IDIB000D671</p>
+      <p>Branch: DULHAPUR</p>
+    </div>
+
+    <div class="signature">
+      <p>Signature of Purchaser</p>
+      <p><strong>For Jaiswal Enterprises</strong></p>
+      <p>(Authorised Signatory)</p>
+    </div>
+
+  </div>
+
+  <button (click)="printInvoice()">Print Invoice</button>
+
+</div>
