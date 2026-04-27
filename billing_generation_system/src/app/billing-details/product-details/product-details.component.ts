@@ -9,8 +9,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTable } from '@angular/material/table';
 import { ViewChild } from '@angular/core';
-import { OutletContext, Router } from '@angular/router';
+import {  Router } from '@angular/router';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { InvoiceDataService } from '../../services/invoice-data.service';
+import { ProductService } from '../../services/product.service';
+import { Observable } from 'rxjs/internal/Observable';
+import { startWith } from 'rxjs/internal/operators/startWith';
+import { map } from 'rxjs/internal/operators/map';
 
 @Component({
   selector: 'app-product-details',
@@ -23,7 +28,8 @@ import { InvoiceDataService } from '../../services/invoice-data.service';
   MatFormFieldModule,
   MatButtonModule,
   MatInputModule,
-  MatIconModule   
+  MatIconModule,
+  MatAutocompleteModule  
   ],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css'
@@ -34,22 +40,69 @@ export class ProductDetailsComponent {
   displayedColumns: string[] = ['sno', 'productName', 'quantity', 'amount', 'total_amount', 'action'];
 
   // Dropdown Data
-  productList: string[] = ['Laptop', 'Mobile', 'Keyboard', 'Mouse'];
+  //  productList: string[] = [];
+  productList: any[] = [];
   quantityList: number[] = [1,2,3,4,5,6,7,8,9,10];
   @ViewChild(MatTable) table!: MatTable<any>;
   productForm: FormGroup;
+  // filteredOptions: Observable<string[]>;
 
-  constructor(private fb: FormBuilder, private invoiceService: InvoiceDataService,  private router: Router) {
+  constructor(private fb: FormBuilder, private invoiceService: InvoiceDataService,  private router: Router,  private productService:ProductService) {
 
     this.productForm = this.fb.group({
       products: this.fb.array([])
     });
-
+    
     // Add first row automatically
     // this.addProduct();
   }
+
+// filterProducts(value: string): string[] {
+//   const filterValue = (value || '').toLowerCase();
+
+//   return this.productList.filter(option =>
+//     option.toLowerCase().includes(filterValue)
+//   );
+// }
+
+filterProducts(value: string): any[] {
+  const filterValue = (value || '').toLowerCase();
+
+  return this.productList.filter(p =>
+    p.productName.toLowerCase().includes(filterValue)
+  );
+}
+
+setProductData(product: any, index: number) {
+  const group = this.products.at(index) as FormGroup;
+
+  group.patchValue({
+    productName: product.productName,
+    amount: product.productPrice
+  });
+}
+
+getProductControl(index: number) {
+  return this.products.at(index).get('productName');
+}
+  
+   private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.productList.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
   
   ngOnInit(): void{
+
+  // this.productService.getAllProducts().subscribe(res => {
+  // this.productList = res.map((p: any) => p.productName);
+  // });
+
+  this.productService.getAllProducts().subscribe(res => {
+  this.productList = res; // store full object
+});
+
     const saveData = this.invoiceService.getInvoiceData();
     if(saveData?.productData?.products)
     {
