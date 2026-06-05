@@ -32,6 +32,6 @@ export class InvoiceDataService {
 
   saveCustomer(data: any)
   {
-    return this.http.post("http://localhost:8090/billing/customer/addCustomer", data);
+    return this.http.post("http://localhost:8080/billing/customer/addCustomer", data);
   }
 }

@@ -3,6 +3,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { InvoiceDataService } from '../../services/invoice-data.service';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-customer-details',
@@ -43,7 +44,7 @@ export class CustomerDetailsComponent  {
   'Uttarakhand',
   'West Bengal'
 ];
-  constructor( private formBuilder: FormBuilder, private router: Router,  private invoiceService: InvoiceDataService) {
+  constructor( private formBuilder: FormBuilder, private router: Router,  private invoiceService: InvoiceDataService, private loginService: LoginService) {
      this.customerForm = this.formBuilder.group({
       customerName:['',Validators.required],
       customerAddress:['',Validators.required],
@@ -53,17 +54,34 @@ export class CustomerDetailsComponent  {
     });
   }
 
-  ngOnInit():void {
-    const saveData = this.invoiceService.getInvoiceData();
-    if(saveData.customerData)
-    {
-      this.customerForm.patchValue(saveData.customerData);
-    }
+    ngOnInit():void {
+      
+      const saveData = this.invoiceService.getInvoiceData();
+      if(saveData.customerData)
+      {
+        this.customerForm.patchValue(saveData.customerData);
+      }
 
-    this.customerForm.valueChanges.subscribe(value => { 
-      this.invoiceService.updateInvoiceData('customerData', value);
-    });
-  }
+      this.loginService.currentUser.subscribe(user => {
+        console.log(user.userName);
+        console.log(user);
+      if(user)
+      {
+        console.log(user.userName);
+        this.customerForm.patchValue({
+
+          customerName: user.FirstName + " " + user.LastName,
+          customerAddress: user.customerAddress,
+          customerGSTIN: user.customerGSTIN
+        });
+      }
+
+   });
+
+      this.customerForm.valueChanges.subscribe(value => { 
+        this.invoiceService.updateInvoiceData('customerData', value);
+      });
+    }
 
 
  onSubmit()
